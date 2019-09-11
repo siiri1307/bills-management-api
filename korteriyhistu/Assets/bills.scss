@@ -1,0 +1,51 @@
+﻿body {
+    margin-right: 150px;
+    margin-left: 150px;
+    font-family: Arial;
+    font-size: 17px;
+}
+
+h1 {
+    text-align: center;
+    font-weight: bold;
+}
+
+#subtitle::before {
+    content: "";
+    display: block;
+    border-bottom: 2px solid;
+    width: auto;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#subtitle {
+    margin-top: 10%;
+    font-weight: bold;
+}
+
+div {
+    line-height: 1.9;
+}
+
+#bank-account-number::after {
+    content: "";
+    display: block;
+    border-bottom: 2px solid;
+    width: auto;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#deadline {
+    display: inline-block;
+}
+
+.left-column {
+    width: 300px;
+    float: left;
+}
+
+#area, #payment-for-period, #total, #pdf-author {
+    margin-top: 5%;
+}

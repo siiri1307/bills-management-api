@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:50022/",
+      "applicationUrl": "http://localhost:50022",
       "sslPort": 0
     }
   },
@@ -19,11 +19,20 @@
     "korteriyhistu": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/bills",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:50023/"
+      "applicationUrl": "http://localhost:50022/"
+    },
+    "korteriyhistuProd": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/bills",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "http://localhost:50022/"
     }
   }
 }
