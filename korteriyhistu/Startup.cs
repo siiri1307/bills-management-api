@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using korteriyhistu.Models;
 using DinkToPdf.Contracts;
 using DinkToPdf;
+using korteriyhistu.Data;
 
 namespace korteriyhistu
 {
@@ -41,6 +42,12 @@ namespace korteriyhistu
             {
                 o.AllowEmptyInputInBodyModelBinding = true;
             });
+
+            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddScoped<ISupervisor, BillSupervisor>();
+            services.AddScoped<IBillRepository, BillRepository>();
+            services.AddScoped<IApartmentRepository, ApartmentRepository>();
 
             if (isDev)
             {
