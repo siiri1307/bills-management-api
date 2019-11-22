@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace korteriyhistu.Models
 {
-    public interface IEmailService
+    public class BillViewModel
     {
-        Task SendAsync(EmailMessage emailMessage);
-        //Task Send();
+        public List<Bill> billsList { get; set; }
+
+        public BillViewModel() { }
     }
 }

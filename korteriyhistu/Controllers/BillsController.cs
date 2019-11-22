@@ -10,10 +10,11 @@ using System.IO;
 using CsvHelper;
 using System.Text;
 using CsvHelper.Configuration;
+using System.Globalization;
 
 namespace korteriyhistu.Controllers
 {
-    [Produces("application/json")] //content type of output
+    //[Produces("application/json")] //content type of output
     [Route("api/Bills")] //tells the server to use this controller when the route starts with api/Bills
     public class BillsController : Controller
     {
@@ -200,6 +201,7 @@ namespace korteriyhistu.Controllers
             return NoContent();
         }
 
+        /*
         // POST: api/Bills
         //generate bills in DB for the running month
         [HttpPost]
@@ -220,6 +222,41 @@ namespace korteriyhistu.Controllers
                 DateTime deadline = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 10);
 
                 Bill bill = new Bill(sum, this.getMaxBillNumberValue() + 1, apartments.ElementAtOrDefault(i).number, sum, DateTime.Now.Month, deadline, new List<LogEntry>());
+                this.billsContext.Add(bill);
+                await this.billsContext.SaveChangesAsync();
+            }
+
+            var bills = GetBill();
+
+            return Ok(bills);
+        }*/
+        
+        [HttpPost]
+        public async Task<IActionResult> PostBills([FromBody] string monthName)
+        {
+            int monthNumber = DateTime.ParseExact(monthName, "MMMM", CultureInfo.InvariantCulture).Month;
+            //missing input from frontend about year
+         
+            //if now is January and the input month is December, assume you want to make bills for the December of previous year
+            int year = (DateTime.Now.Month.Equals(1) && monthName.Equals("December")) ? (DateTime.Now.Year - 1) : DateTime.Now.Year;
+
+            DateTime forMonthOf = new DateTime(year, monthNumber, 10);
+
+            var billsForRunningMonth = this.billsContext.Bill.Where(bill => bill.MonthToPayFor == monthNumber).ToList();
+
+            if (billsForRunningMonth.Count() > 0)
+            {
+                return StatusCode(422);
+            }
+
+            var apartments = this.apartmentsContext.Apartment.ToArray();
+
+            for (var i = 0; i < apartments.Length; i++)
+            {
+                double sum = apartments.ElementAtOrDefault(i).surfaceArea * 1.25 + apartments.ElementAtOrDefault(i).extraSurfaceArea * 1.25;
+                DateTime deadline = forMonthOf.AddMonths(1);
+
+                Bill bill = new Bill(sum, this.getMaxBillNumberValue() + 1, apartments.ElementAtOrDefault(i).number, sum, monthNumber, deadline, new List<LogEntry>());
                 this.billsContext.Add(bill);
                 await this.billsContext.SaveChangesAsync();
             }
@@ -254,7 +291,7 @@ namespace korteriyhistu.Controllers
         {
             return billsContext.Bill.Any(e => e.BillId == id);
         }
-
+        
         public void addBillsForRunningMonth()
         {
             var apartments = this.apartmentsContext.Apartment.ToArray();

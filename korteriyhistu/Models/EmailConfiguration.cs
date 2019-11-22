@@ -11,10 +11,12 @@ namespace korteriyhistu.Models
 
         public int SmtpPort { get; set; }
 
-        public string SmtpUsername { get; set; }
+        public string Username { get; set; }
 
-        public string ClientId { get; set; }
+        public string Password { get; set; }
 
-        public string ClientSecret { get; set; }
+        public string MailFrom { get;  set; }
+        
+        public List<string> MailTo { get; set; }
     }
 }

@@ -43,6 +43,7 @@ namespace korteriyhistu.Data
             for (int i = 0; i < apartments.Count(); i++)
             {
                 Bill bill = await billRepository.GetBillCurrentMonthAsync(apartments.ElementAt(i).number);
+       
                 double debt = await billRepository.GetDebtAsync(apartments.ElementAt(i).number);
 
                 var objectSettings = new ObjectSettings
@@ -62,6 +63,45 @@ namespace korteriyhistu.Data
             }
 
             return billAsBinaryData;
+        }
+
+        public async Task<Dictionary<string, byte[]>> GetBillsBinary(List<Bill> requestedBills)
+        {
+            var apartments = await this.apartmentRepository.GetAllAsync();
+
+            Dictionary<string, byte[]> billsData = new Dictionary<string, byte[]>();
+            
+            for (int i = 0; i < requestedBills.Count(); i++)
+            {
+                var apartmentNo = requestedBills.ElementAt(i).Apartment;
+                var apartment = await this.apartmentRepository.GetByNumber(apartmentNo);
+
+                Bill bill = await billRepository.GetBillById(requestedBills.ElementAt(i).BillId);
+
+                double debt = await billRepository.GetDebtAsync(apartmentNo); //change this to Apartment as well
+
+                var objectSettings = new ObjectSettings
+                {
+                    PagesCount = true,
+                    HtmlContent = HTMLGenerator.GetBillAsHtmlString(apartment, bill, debt),
+                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "bills.scss") },
+                };
+
+                var pdf = new HtmlToPdfDocument()
+                {
+                    GlobalSettings = globalSettings,
+                    Objects = { objectSettings }
+                };
+
+                //billAsBinaryData[i] = this.converter.Convert(pdf);
+
+                var bin = this.converter.Convert(pdf);
+                var pdfFileName = "2019-" + bill.MonthToPayFor + "-korter" + bill.Apartment.ToString();
+
+                billsData.Add(pdfFileName, bin);
+            }
+
+            return billsData;
         }
     }
 }

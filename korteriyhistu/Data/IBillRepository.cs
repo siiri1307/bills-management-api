@@ -12,6 +12,7 @@ namespace korteriyhistu.Data
         Task<IEnumerable<Bill>> GetAllCurrentMonthAsync();
         Task<Bill> GetBillCurrentMonthAsync(int apartmentNumber); //param of apartment
         Task<double> GetDebtAsync(int apartmentNumber); //param of apartment
+        Task<Bill> GetBillById(int id);
         
     }
 }

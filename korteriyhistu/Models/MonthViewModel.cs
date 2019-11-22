@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace korteriyhistu.Models
 {
-    public interface IEmailService
+    public class MonthViewModel
     {
-        Task SendAsync(EmailMessage emailMessage);
-        //Task Send();
+        public string monthName { get; set; }
+
+        public MonthViewModel() { }
     }
 }

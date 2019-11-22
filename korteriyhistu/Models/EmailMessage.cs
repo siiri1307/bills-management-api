@@ -12,6 +12,15 @@ namespace korteriyhistu.Models
         public string Subject { get; set; }
         public string Content { get; set; }
         public byte[][] Attachments;
+        public Dictionary<string, byte[]> BillsFileNamesWithBinary { get; set; }
+
+        public EmailMessage(string subject, string body, Dictionary<string, byte[]> billsFileNamesWithBinary)
+        {
+            this.Subject = subject;
+            this.Content = body;
+            this.BillsFileNamesWithBinary = billsFileNamesWithBinary;
+
+        }
 
         public EmailMessage(EmailAddress from, List<EmailAddress> to, string subject, string body, byte[][] attachements)
         {

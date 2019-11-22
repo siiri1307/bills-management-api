@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 
 namespace korteriyhistu.Models
 {
-    interface IEmailConfiguration
+    public interface IEmailConfiguration
     {
         string SmtpServer { get; }
         int SmtpPort { get; }
-        string SmtpUsername { get; set; }
-        string ClientId { get; set; }
-        string ClientSecret { get; set; }
+        string Username { get; set; }
+        string Password { get; set; }
+        string MailFrom { get; set; }
+        List<string> MailTo { get; set; }
     }
 }

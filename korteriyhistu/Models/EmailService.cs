@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,47 +18,41 @@ namespace korteriyhistu.Models
 {
     public class EmailService : IEmailService
     {
-        private EmailConfiguration emailConfiguration;
+        private readonly IEmailConfiguration emailConfiguration;
 
-        public EmailService()
+        public EmailService(IEmailConfiguration emailConfiguration)
         {
-            //this.emailConfiguration = emailConfiguration;
+            this.emailConfiguration = emailConfiguration;
             
         }
-        public async Task Send(EmailMessage email)
+        public async Task SendAsync(EmailMessage email)
         {
-            using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+            using (var smtpClient = new SmtpClient(this.emailConfiguration.SmtpServer, this.emailConfiguration.SmtpPort))
             {
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential("", "");
+                smtpClient.Credentials = new NetworkCredential(this.emailConfiguration.Username, this.emailConfiguration.Password);
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtpClient.EnableSsl = true;
 
                 //Message part
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress(email.FromAddress.Address);// 
+                mail.From = new MailAddress(this.emailConfiguration.MailFrom);
 
-                for(int j = 0; j < email.ToAddresses.Count; j++)
+                for(int j = 0; j < this.emailConfiguration.MailTo.Count; j++)
                 {
-                    mail.To.Add(email.ToAddresses.ElementAt(j).Address);
+                    mail.To.Add(this.emailConfiguration.MailTo.ElementAt(j));
                 }
-                //mail.To.Add("");
+             
+                mail.Subject = email.Subject;
+                mail.Body = email.Content; 
 
-                mail.Subject = email.Subject; //"Novembri arved";
-                mail.Body = email.Content; //"Saadan teile novembri arved";
-
-                for(int i = 0; i < email.Attachments.Length; i++)
+                foreach(KeyValuePair<string, byte[]> kvp in email.BillsFileNamesWithBinary)
                 {
-                    mail.Attachments.Add(new Attachment(new MemoryStream(email.Attachments.ElementAt(i)), "bill" + (i+1) + ".pdf"));
+                    mail.Attachments.Add(new Attachment(new MemoryStream(kvp.Value), kvp.Key + ".pdf"));
                 }
-                //mail.Attachments.Add(new Attachment(new MemoryStream(billsAsBinary[0]), "bill1.pdf"));
-                //mail.Attachments.Add(new Attachment(new MemoryStream(billsAsBinary[1]), "bill2.pdf"));
-                //mail.Attachments.Add(new Attachment(new MemoryStream(billsAsBinary[2]), "bill3.pdf"));
 
-                
                 await smtpClient.SendMailAsync(mail);
             }
         }
-            
     }
 }

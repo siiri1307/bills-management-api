@@ -22,6 +22,11 @@ namespace korteriyhistu.Data
         public async Task<IEnumerable<Bill>> GetAllCurrentMonthAsync() => 
             await this.context.Bill.Where(bill => bill.MonthToPayFor == (DateTime.Now.Month)).ToListAsync();
 
+        public async Task<Bill> GetBillById(int id)
+        {
+            return await this.context.Bill.Where(b => b.BillId == id).FirstOrDefaultAsync();
+        }
+
         public async Task<Bill> GetBillCurrentMonthAsync(int apartmentNumber)
         {
             return await this.context.Bill.Where(b => b.MonthToPayFor == DateTime.Now.Month && b.Apartment == apartmentNumber).FirstOrDefaultAsync();
