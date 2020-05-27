@@ -19,7 +19,8 @@ namespace korteriyhistu.Models
                     Total = 110,
                     Apartment = 1,
                     SumToPay = 110,
-                    MonthToPayFor = 7,
+                    MonthToPayFor = 5,
+                    YearToPayFor = 2020,
                     PaymentDeadline = new DateTime(2019, 8, 10),
                     Status = 3,
                     Logs = new List<LogEntry>()
@@ -31,7 +32,8 @@ namespace korteriyhistu.Models
                     Total = 95,
                     Apartment = 2,
                     SumToPay = 95,
-                    MonthToPayFor = 7,
+                    MonthToPayFor = 5,
+                    YearToPayFor = 2020,
                     PaymentDeadline = new DateTime(2019, 8, 10),
                     Status = 3,
                     Logs = new List<LogEntry>()
@@ -43,7 +45,8 @@ namespace korteriyhistu.Models
                     Total = 100,
                     Apartment = 3,
                     SumToPay = 100,
-                    MonthToPayFor = 7,
+                    MonthToPayFor = 5,
+                    YearToPayFor = 2020,
                     PaymentDeadline = new DateTime(2019, 8, 10),
                     Status = 3,
                     Logs = new List<LogEntry>()

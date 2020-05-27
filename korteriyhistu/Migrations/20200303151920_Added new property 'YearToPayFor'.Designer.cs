@@ -11,9 +11,10 @@ using System;
 namespace korteriyhistu.Migrations
 {
     [DbContext(typeof(BillsContext))]
-    partial class BillsContextModelSnapshot : ModelSnapshot
+    [Migration("20200303151920_Added new property 'YearToPayFor'")]
+    partial class AddednewpropertyYearToPayFor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,8 +27,6 @@ namespace korteriyhistu.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Apartment");
-
-                    b.Property<string>("Comment");
 
                     b.Property<int>("MonthToPayFor");
 

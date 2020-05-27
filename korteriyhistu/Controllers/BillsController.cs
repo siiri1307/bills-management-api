@@ -154,7 +154,7 @@ namespace korteriyhistu.Controllers
             
             foreach(var log in logsDB) //iterate over logs in the DB
             {
-                var incomingLog = bill.Logs.SingleOrDefault(l => l.LogEntryId == log.LogEntryId);//is the incoming log already in DB?
+                var incomingLog = bill.Logs.SingleOrDefault(l => l.LogEntryId == log.LogEntryId);
                 if(incomingLog != null)
                 {
                     billsContext.Entry(log).CurrentValues.SetValues(incomingLog);
@@ -234,15 +234,18 @@ namespace korteriyhistu.Controllers
         [HttpPost]
         public async Task<IActionResult> PostBills([FromBody] string monthName)
         {
-            int monthNumber = DateTime.ParseExact(monthName, "MMMM", CultureInfo.InvariantCulture).Month;
+            int monthToPayFor = Int32.Parse(monthName.Split(" ")[0]);
+            int yearToPayFor = Int32.Parse(monthName.Split(" ")[1]);
+
+            //int monthNumber = DateTime.ParseExact(monthName, "MMMM", CultureInfo.InvariantCulture).Month;
             //missing input from frontend about year
          
             //if now is January and the input month is December, assume you want to make bills for the December of previous year
-            int year = (DateTime.Now.Month.Equals(1) && monthName.Equals("December")) ? (DateTime.Now.Year - 1) : DateTime.Now.Year;
+            //int year = (DateTime.Now.Month.Equals(1) && monthName.Equals("December")) ? (DateTime.Now.Year - 1) : DateTime.Now.Year;
 
-            DateTime forMonthOf = new DateTime(year, monthNumber, 10);
+            DateTime forMonthOf = new DateTime(yearToPayFor, monthToPayFor, 10);
 
-            var billsForRunningMonth = this.billsContext.Bill.Where(bill => bill.MonthToPayFor == monthNumber).ToList();
+            var billsForRunningMonth = this.billsContext.Bill.Where(bill => bill.MonthToPayFor == monthToPayFor && bill.YearToPayFor == yearToPayFor).ToList();
 
             if (billsForRunningMonth.Count() > 0)
             {
@@ -256,7 +259,7 @@ namespace korteriyhistu.Controllers
                 double sum = apartments.ElementAtOrDefault(i).surfaceArea * 1.25 + apartments.ElementAtOrDefault(i).extraSurfaceArea * 1.25;
                 DateTime deadline = forMonthOf.AddMonths(1);
 
-                Bill bill = new Bill(sum, this.getMaxBillNumberValue() + 1, apartments.ElementAtOrDefault(i).number, sum, monthNumber, deadline, new List<LogEntry>());
+                Bill bill = new Bill(sum, this.getMaxBillNumberValue() + 1, apartments.ElementAtOrDefault(i).number, sum, monthToPayFor, yearToPayFor, deadline, new List<LogEntry>(), "Not paid");
                 this.billsContext.Add(bill);
                 await this.billsContext.SaveChangesAsync();
             }
@@ -301,7 +304,7 @@ namespace korteriyhistu.Controllers
                 double sum = apartments.ElementAtOrDefault(i).surfaceArea * 1.25 + apartments.ElementAtOrDefault(i).extraSurfaceArea * 1.25;
                 DateTime deadline = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 10);
 
-                Bill bill = new Bill(sum, this.getMaxBillNumberValue() + 1, apartments.ElementAtOrDefault(i).number, sum, DateTime.Now.Month, deadline, new List<LogEntry>());
+                Bill bill = new Bill(sum, this.getMaxBillNumberValue() + 1, apartments.ElementAtOrDefault(i).number, sum, DateTime.Now.Month, DateTime.Now.Year, deadline, new List<LogEntry>(), "");
                 this.billsContext.Add(bill);
                 this.billsContext.SaveChanges();
             }

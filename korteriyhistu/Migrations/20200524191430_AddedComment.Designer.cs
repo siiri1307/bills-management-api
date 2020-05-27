@@ -11,9 +11,10 @@ using System;
 namespace korteriyhistu.Migrations
 {
     [DbContext(typeof(BillsContext))]
-    partial class BillsContextModelSnapshot : ModelSnapshot
+    [Migration("20200524191430_AddedComment")]
+    partial class AddedComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

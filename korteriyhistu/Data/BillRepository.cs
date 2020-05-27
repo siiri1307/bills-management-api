@@ -34,7 +34,14 @@ namespace korteriyhistu.Data
 
         public async Task<double> GetDebtAsync(int apartmentNumber)
         {
-            return await this.context.Bill.Where(b => b.Apartment == apartmentNumber && b.MonthToPayFor != DateTime.Now.Month).SumAsync(i => i.SumToPay);
+            var bills = await this.GetAllAsync();
+            foreach(Bill b in bills){
+                var deadline = b.PaymentDeadline;
+                var booleanV = deadline < DateTime.Now;
+            }
+            var apNO = apartmentNumber;
+            var debt = await this.context.Bill.Where(b => b.Apartment == apartmentNumber && b.PaymentDeadline < DateTime.Now).SumAsync(i => i.SumToPay);
+            return await this.context.Bill.Where(b => b.Apartment == apartmentNumber && b.PaymentDeadline < DateTime.Now).SumAsync(i => i.SumToPay);
         }
     }
 }

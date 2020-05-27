@@ -30,19 +30,24 @@ namespace korteriyhistu.Models
             using (var smtpClient = new SmtpClient(this.emailConfiguration.SmtpServer, this.emailConfiguration.SmtpPort))
             {
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(this.emailConfiguration.Username, this.emailConfiguration.Password);
+                //smtpClient.Credentials = new NetworkCredential(this.emailConfiguration.Username, this.emailConfiguration.Password);
+                smtpClient.Credentials = new NetworkCredential(Environment.GetEnvironmentVariable("BillsAPI_Username"), Environment.GetEnvironmentVariable("BillsAPI_Password"));
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtpClient.EnableSsl = true;
 
                 //Message part
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress(this.emailConfiguration.MailFrom);
+                //mail.From = new MailAddress(this.emailConfiguration.MailFrom);
+                mail.From = new MailAddress(Environment.GetEnvironmentVariable("BillsAPI_MailFrom"));
+                mail.To.Add(Environment.GetEnvironmentVariable("BillsAPI_MailTo"));
 
+                /*
                 for(int j = 0; j < this.emailConfiguration.MailTo.Count; j++)
                 {
                     mail.To.Add(this.emailConfiguration.MailTo.ElementAt(j));
                 }
-             
+                */
+
                 mail.Subject = email.Subject;
                 mail.Body = email.Content; 
 

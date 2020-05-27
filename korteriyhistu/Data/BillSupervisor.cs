@@ -96,7 +96,7 @@ namespace korteriyhistu.Data
                 //billAsBinaryData[i] = this.converter.Convert(pdf);
 
                 var bin = this.converter.Convert(pdf);
-                var pdfFileName = "2019-" + bill.MonthToPayFor + "-korter" + bill.Apartment.ToString();
+                var pdfFileName = "arve-2020-" + bill.MonthToPayFor + "-korter" + bill.Apartment.ToString();
 
                 billsData.Add(pdfFileName, bin);
             }

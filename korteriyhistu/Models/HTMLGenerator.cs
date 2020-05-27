@@ -17,7 +17,7 @@ namespace korteriyhistu.Models
                 <html>
                     <head><meta charset='UTF-8'></head>
                     <body>
-                        <h1>2019. " + (MonthInEstonian)bill.MonthToPayFor + @" arve</h1>
+                        <h1>2020. " + (MonthInEstonian)bill.MonthToPayFor + @" arve</h1>
                         <div id='subtitle'>Jakobi 31 korteriühistu</div>
                         <div>Registrikood: 80483047</div>
                         <div>Aadress: Jakobi 31, Tartu, 51006</div>
@@ -48,15 +48,19 @@ namespace korteriyhistu.Models
                         </div>");
             if (apartment.extraSurfaceArea > 0)
             {
-                sb.Append(@" <div>
+                sb.Append(@"<div>
                             <span class='left-column'>Võetud lisakohustus ruutmeetrites:</span>
                             <span>" + apartment.extraSurfaceArea + @"</span></div>");
-            }
-
-            sb.Append(@"<div id='payment-for-period'>
+                sb.Append(@"<div id='payment-for-period'>
                             <span class='left-column'>Remondifondi makse:</span>
-                            <span>1.25 * (" + apartment.surfaceArea + @" + " + apartment.extraSurfaceArea + @") = " + bill.Total + @" eurot</span></div>
-                        <div>
+                            <span>1.25 * (" + apartment.surfaceArea + @" + " + apartment.extraSurfaceArea + @") = " + bill.Total + @" eurot</span></div>");
+            }
+            else {
+                sb.Append(@"<div id='payment-for-period'>
+                            <span class='left-column'>Remondifondi makse:</span>
+                            <span>1.25 * " + apartment.surfaceArea + @" = " + bill.Total + @" eurot</span></div>");
+            }
+                sb.Append(@"<div>
                             <span class='left-column'>Eelnevate perioodide võlgnevus:</span>
                             <span>" + debt + @" eurot</span></div>
                         <div id='total'>
@@ -65,7 +69,7 @@ namespace korteriyhistu.Models
                         </div>
                         <div id='pdf-author'>
                             <span class='left-column'>Arve koostas:</span> 
-                            <span>John Roe</span>
+                            <span>Vootele Rõtov</span>
                         </div>
                     </body>
                 </html>");
