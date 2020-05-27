@@ -103,8 +103,7 @@ namespace korteriyhistu
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+                .AllowAnyHeader());
 
             //app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod());
 
