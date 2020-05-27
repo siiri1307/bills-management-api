@@ -18,6 +18,8 @@ namespace korteriyhistu
 {
     public class Startup
     {
+        readonly string BillsFEAppOrigins = "_billsFEAppOrigins";
+
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
@@ -31,7 +33,14 @@ namespace korteriyhistu
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: BillsFEAppOrigins,
+                    builder => {
+                        builder.WithOrigins("https://bills-management-app.herokuapp.com", "http://localhost:4200")
+                        .AllowAnyHeader();
+                    });
+            });
 
             services.AddMvc().AddJsonOptions(
                 options => options.SerializerSettings.ReferenceLoopHandling =
@@ -67,17 +76,7 @@ namespace korteriyhistu
                 services.AddDbContext<ApartmentsContext>(options =>
                    options.UseSqlServer(Configuration.GetConnectionString("ApartmentsContext")));
             }
-           
-            /*services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });*/
-
-            
+                 
             //registers DinkToPdf library
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
@@ -100,12 +99,7 @@ namespace korteriyhistu
 
             }
 
-            app.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
-            //app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod());
+            app.UseCors(BillsFEAppOrigins);
 
             app.UseMvc();
         }
