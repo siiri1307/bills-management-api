@@ -78,6 +78,7 @@ namespace korteriyhistu
                     options.UseSqlServer(Configuration.GetConnectionString("LogEntriesContext")));
         }
 
+        
         public void Configure(IApplicationBuilder app)
         {
             if (isDev)
