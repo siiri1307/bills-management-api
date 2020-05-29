@@ -1,13 +1,11 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
 using korteriyhistu.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using SelectPdf;
 
 
 namespace korteriyhistu.Data
@@ -80,25 +78,14 @@ namespace korteriyhistu.Data
 
                 double debt = await billRepository.GetDebtAsync(apartmentNo); //change this to Apartment as well
 
-                var objectSettings = new ObjectSettings
-                {
-                    PagesCount = true,
-                    HtmlContent = HTMLGenerator.GetBillAsHtmlString(apartment, bill, debt),
-                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "bills.scss") },
-                };
+                HtmlToPdf converter = new HtmlToPdf();
 
-                var pdf = new HtmlToPdfDocument()
-                {
-                    GlobalSettings = globalSettings,
-                    Objects = { objectSettings }
-                };
-
-                //billAsBinaryData[i] = this.converter.Convert(pdf);
-
-                var bin = this.converter.Convert(pdf);
+                PdfDocument pdfDoc = converter.ConvertHtmlString(HTMLGenerator.GetBillAsHtmlString(apartment, bill, debt));
+                byte[] pdfData = pdfDoc.Save();
+             
                 var pdfFileName = "arve-2020-" + bill.MonthToPayFor + "-korter" + bill.Apartment.ToString();
 
-                billsData.Add(pdfFileName, bin);
+                billsData.Add(pdfFileName, pdfData);
             }
 
             return billsData;

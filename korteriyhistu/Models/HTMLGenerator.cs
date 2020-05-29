@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,10 @@ namespace korteriyhistu.Models
 
             sb.Append(@"
                 <html>
-                    <head><meta charset='UTF-8'></head>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <link rel='stylesheet' type='text/css' href=" + Path.Combine(Directory.GetCurrentDirectory(), "Assets", "bills.scss") + @" />
+                    </head>
                     <body>
                         <h1>2020. " + (MonthInEstonian)bill.MonthToPayFor + @" arve</h1>
                         <div id='subtitle'>Jakobi 31 korteriühistu</div>
